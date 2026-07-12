@@ -1,0 +1,18 @@
+# Pi5 Lab — Episode 6: Vaultwarden (self-hosted Bitwarden-compatible password manager)
+# Docs: https://github.com/dani-garcia/vaultwarden/wiki
+services:
+  vaultwarden:
+    image: vaultwarden/server:latest
+    container_name: vaultwarden
+    ports:
+      # LAN-only by design. Browser extensions require HTTPS to talk to the server —
+      # put this behind Caddy/Tailscale for real use (covered in the episode).
+      - "8083:80"
+    environment:
+      TZ: ${TZ}
+      SIGNUPS_ALLOWED: "true"        # flip to "false" after you create YOUR account
+      ADMIN_TOKEN: ${ADMIN_TOKEN}
+      DOMAIN: ${DOMAIN}
+    volumes:
+      - ./data/vaultwarden:/data
+    restart: unless-stopped

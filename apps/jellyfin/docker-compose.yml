@@ -1,0 +1,17 @@
+# Pi5 Lab — Episode 7: Jellyfin (your own streaming service)
+# Docs: https://jellyfin.org/docs
+services:
+  jellyfin:
+    image: jellyfin/jellyfin:latest
+    container_name: jellyfin
+    ports:
+      - "8096:8096"          # web UI + apps
+    environment:
+      TZ: ${TZ}
+    volumes:
+      - ./data/config:/config
+      - ./data/cache:/cache
+      - ${MEDIA_PATH}:/media:ro   # your movies/shows/music — read-only on purpose
+    devices:
+      - /dev/dri:/dev/dri    # Pi 5 GPU for hardware-accelerated decode (V4L2)
+    restart: unless-stopped

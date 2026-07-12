@@ -1,0 +1,11 @@
+# Pi5 Lab — Episode 8: Uptime Kuma (know when things die before anyone complains)
+# Docs: https://github.com/louislam/uptime-kuma
+services:
+  uptime-kuma:
+    image: louislam/uptime-kuma:1
+    container_name: uptime-kuma
+    ports:
+      - "8084:3001"
+    volumes:
+      - ./data/uptime-kuma:/app/data
+    restart: unless-stopped

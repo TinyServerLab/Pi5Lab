@@ -1,0 +1,24 @@
+# Pi5 Lab — Episode 9: Local AI (Ollama + Open WebUI) — a private ChatGPT on a Pi
+# Needs the 8 GB Pi 5. Stick to small models (1-3B parameters).
+services:
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    volumes:
+      - ./data/ollama:/root/.ollama
+    # No published port — only Open WebUI talks to it, on the internal network
+    restart: unless-stopped
+
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: open-webui
+    depends_on:
+      - ollama
+    ports:
+      - "8085:8080"
+    environment:
+      OLLAMA_BASE_URL: http://ollama:11434
+      WEBUI_AUTH: "true"
+    volumes:
+      - ./data/open-webui:/app/backend/data
+    restart: unless-stopped
