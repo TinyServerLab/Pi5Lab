@@ -22,6 +22,13 @@ sudo ufw allow 8083/tcp
 For real use pair this with Tailscale (easiest) or a reverse proxy with TLS —
 that's the second half of the episode.
 
+## TLS Configuration
+Created a folder under data
+1. mkdir ssl
+2. Run openssl to create self signed certificate
+   ```sh
+   openssl req -newkey rsa:4096 -x509 -days 365 -nodes -out pi5lab_cert.crt -keyout pi5lab_private_key.key
+   ```
 **Backups:** your passwords now live in `./data/vaultwarden`. Back that folder up
 off-Pi on a schedule. A password manager without backups is a time bomb:
 
