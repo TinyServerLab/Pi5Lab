@@ -13,6 +13,8 @@ services:
       SIGNUPS_ALLOWED: "true"        # flip to "false" after you create YOUR account
       ADMIN_TOKEN: ${ADMIN_TOKEN}
       DOMAIN: ${DOMAIN}
+      ROCKET_TLS: '{certs="/ssl/pi5lab_cert.crt",key="/ssl/pi5lab_private_key.key"}'
     volumes:
       - ./data/vaultwarden:/data
+      - ./data/ssl:/ssl:ro
     restart: unless-stopped
