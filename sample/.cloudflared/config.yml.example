@@ -1,0 +1,10 @@
+# Copy to ~/.cloudflared/config.yml after getting tunnel UUID
+tunnel: tinyserverlab
+credentials-file: /home/youruser/.cloudflared/YOUR-TUNNEL-UUID.json
+protocol: http2
+
+ingress:
+  - hostname: expense.tinyserverlab.in
+    service: http://127.0.0.1:8085
+  # (rest of routes as above)
+  - service: http_status:404

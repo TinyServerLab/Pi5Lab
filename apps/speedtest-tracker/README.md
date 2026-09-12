@@ -27,3 +27,4 @@ docker compose logs | grep -iA2 'admin'
 - `SPEEDTEST_SCHEDULE` is standard cron — `"*/30 * * * *"` for every 30 min
 - Don't schedule tests more often than every 15 min; it saturates your own link
 - Notifications (Telegram/Discord/email) are configurable in Settings — great episode moment
+- Default initial admin user admin@example.com | password

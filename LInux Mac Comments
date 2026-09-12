@@ -1,0 +1,10 @@
+# Linux commends
+## Secure command MacOS
+### Add persistent ssh key to keychain
+Key added permenently works after reboot
+``` sh
+add-ssh --apple-use-keychain ~/.ssh/pi5lab
+
+### View list of ssh key
+add-ssh -l
+```

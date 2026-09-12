@@ -1,0 +1,30 @@
+# Docker containers commends
+## Administrative commends
+### List of running containres
+```sh
+# List of containers
+docker ps
+
+# Containers logs
+docker logs -f pihole
+## -f Follow logs
+## pihole - container name this can be either name or ID
+```
+
+If you running multiple container with compose.yml use below to see all container logs
+- Navigate to *docker-compose.yml* | *compose.yml* location
+- The logs started container name followed by the transaction
+
+```sh
+cd /opt/application/
+docker compose logs -f
+```
+
+### Docker Compose
+Docker compose if more reliable for live app, application come back online after reboot without manual intervension
+
+#### Run docker compose containers
+- Navigate to application directory where the compose-yml exist
+```sh
+docker compose up -d
+# -d - detach mode where running backround
