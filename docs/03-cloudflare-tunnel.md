@@ -1,4 +1,4 @@
-# Episode 6 — Cloudflare Tunnel (HTTPS + Zero Port Forwarding)
+# Cloudflare Tunnel (HTTPS + Zero Port Forwarding)
  
 Access your Pi from anywhere in the world with a real HTTPS certificate. No port-forwarding. No exposed ports. No router configuration nightmare.
  
