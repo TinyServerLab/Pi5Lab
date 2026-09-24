@@ -36,7 +36,7 @@
 # Finance Tracker
 http://ft.{$DOMAIN:tinyserverlab.in} {
 	import common
-	reverse_proxy {$FT_UPSTREAM:finance-app:8090}
+	reverse_proxy {$FT_UPSTREAM:finance-app:8000}
 }
 
 # Ledger

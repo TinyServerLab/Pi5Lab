@@ -4,7 +4,7 @@
 # Idempotent: an existing role or database is left untouched (no password
 # reset, no owner change), so this is safe to re-run by hand after adding a
 # new app to .env:
-#   docker exec shared-postgres-dbs bash /docker-entrypoint-initdb.d/01-init-databases.sh
+#   docker exec shared-postgres bash /docker-entrypoint-initdb.d/01-init-databases.sh
 #
 # Note: the postgres image only runs this automatically on the FIRST start
 # (empty data volume). Later changes to .env are NOT applied — re-run it

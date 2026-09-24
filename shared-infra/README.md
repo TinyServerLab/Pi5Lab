@@ -6,12 +6,12 @@ instead of a database container and exposed port per app.
 ```
 Cloudflare ─► cloudflared ─► 127.0.0.1:8080 ─► shared-caddy ──(shared-web)──► app containers
                                                                                │
-                                               shared-postgres-dbs ◄─(shared-db)┘
+                                               shared-postgres ◄─(shared-db)┘
 ```
 
 | App             | URL                            | Caddy upstream               | Database      |
 |-----------------|--------------------------------|------------------------------|---------------|
-| Finance Tracker | `ft.tinyserverlab.in`          | `finance-app:8090`           | `finance_app` |
+| Finance Tracker | `ft.tinyserverlab.in`          | `finance-app:8000`           | `finance_app` |
 | Ledger          | `ledger.tinyserverlab.in`      | `ledger-app:8000`            | `ledger`      |
 | NSE Signal      | `nse.tinyserverlab.in`         | `nse-signal-trader:8000`     | `nse_signal`  |
 | NSE Dashboard   | `nse-dash.tinyserverlab.in`    | `nse-signal-dashboard:8501`  | (same)        |
@@ -22,7 +22,7 @@ Upstreams can be changed in `caddy/.env` without editing the Caddyfile.
 
 ```bash
 cd postgres && cp .env.example .env && nano .env   # set real passwords
-docker compose up -d && docker logs shared-postgres-dbs | grep init-db
+docker compose up -d && docker logs shared-postgres | grep init-db
 
 cd ../caddy && cp .env.example .env
 docker compose up -d
@@ -38,7 +38,7 @@ services:
   app:
     container_name: finance-app          # must match the Caddy upstream
     environment:
-      DATABASE_URL: postgresql://finance_app:<ft_password>@shared-postgres-dbs:5432/finance_app
+      DATABASE_URL: postgresql://finance_app:<ft_password>@shared-postgres:5432/finance_app
     networks: [shared-db, shared-web]
 
 networks:
@@ -78,12 +78,12 @@ database is skipped and never modified — passwords are not reset.
 
 - **Add an app later:** add `POSTGRES_<PREFIX>_*` to `.env`, add the prefix to
   `APPS=(...)` in the script, `docker compose up -d` (reloads env), then:
-  `docker exec shared-postgres-dbs bash /docker-entrypoint-initdb.d/01-init-databases.sh`
+  `docker exec shared-postgres bash /docker-entrypoint-initdb.d/01-init-databases.sh`
 - **Change an app password:** editing `.env` alone does nothing for an existing role.
-  `docker exec -it shared-postgres-dbs psql -U pgadmin -d postgres -c "ALTER ROLE finance_app PASSWORD 'new';"`
+  `docker exec -it shared-postgres psql -U pgadmin -d postgres -c "ALTER ROLE finance_app PASSWORD 'new';"`
 
 ## Backup
 
 ```bash
-docker exec shared-postgres-dbs pg_dumpall -U pgadmin | gzip > pg-$(date +%F).sql.gz
+docker exec shared-postgres pg_dumpall -U pgadmin | gzip > pg-$(date +%F).sql.gz
 ```

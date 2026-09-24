@@ -22,7 +22,7 @@ services:
       - -c
       - maintenance_work_mem=64MB
 
-    # Localhost only — apps reach Postgres as `shared-postgres-dbs:5432` on the
+    # Localhost only — apps reach Postgres as `shared-postgres:5432` on the
     # shared-db network; this port is just for admin tools on the Pi itself.
     ports:
       - "127.0.0.1:${POSTGRES_HOST_PORT:-5432}:5432"
