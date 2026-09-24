@@ -1,0 +1,76 @@
+# Shared Caddy — TinyServerLab
+#
+# Traffic: browser → Cloudflare (HTTPS) → cloudflared on the Pi
+#          → http://127.0.0.1:8080 → this Caddy (:80) → app container
+#
+# One subdomain per app instead of path prefixes (/ft, /nse-signal): apps
+# don't need base-path support (Streamlit, FastAPI and Next.js all break
+# under an unconfigured prefix) and cookies stay isolated per app.
+#
+# {$VAR:default} values come from caddy/.env.
+
+{
+	# TLS is terminated by Cloudflare; Caddy only speaks plain HTTP on the Pi.
+	auto_https off
+
+	servers {
+		# Trust X-Forwarded-* from cloudflared (arrives via the Docker gateway)
+		# so apps see the real client IP.
+		trusted_proxies static private_ranges
+	}
+}
+
+(common) {
+	encode zstd gzip
+	header {
+		X-Content-Type-Options nosniff
+		Referrer-Policy strict-origin-when-cross-origin
+		-Server
+	}
+	log {
+		output stdout
+		format console
+	}
+}
+
+# Finance Tracker
+http://ft.{$DOMAIN:tinyserverlab.in} {
+	import common
+	reverse_proxy {$FT_UPSTREAM:finance-app:8090}
+}
+
+# Ledger
+http://ledger.{$DOMAIN:tinyserverlab.in} {
+	import common
+	reverse_proxy {$LEDGER_UPSTREAM:ledger-app:8000}
+}
+
+# NSE Signal — API / web UI
+http://nse.{$DOMAIN:tinyserverlab.in} {
+	import common
+	reverse_proxy {$NSE_UPSTREAM:nse-signal-trader:8000}
+}
+
+# NSE Signal — Streamlit dashboard (websockets are proxied automatically)
+http://nse-dash.{$DOMAIN:tinyserverlab.in} {
+	import common
+	reverse_proxy {$NSE_DASH_UPSTREAM:nse-signal-dashboard:8501}
+}
+
+# Anything else (bare IP, unknown host): directory page
+:80 {
+	import common
+	header Content-Type "text/html; charset=utf-8"
+	respond `<!DOCTYPE html><html><head><title>TinyServerLab Directory</title>
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<style>body{font-family:system-ui;display:flex;flex-direction:column;align-items:center;
+	justify-content:center;min-height:100vh;gap:16px;margin:0;background:#f8fafc}
+	a{padding:12px 28px;border-radius:8px;text-decoration:none;font-weight:600;font-size:16px;
+	background:#fff;color:#1e40af;border:2px solid #1e40af;min-width:200px;text-align:center}
+	</style></head><body><h1>TinyServerLab Directory</h1>
+	<a href="https://ft.{$DOMAIN:tinyserverlab.in}">Finance Tracker</a>
+	<a href="https://ledger.{$DOMAIN:tinyserverlab.in}">Ledger</a>
+	<a href="https://nse.{$DOMAIN:tinyserverlab.in}">NSE Signal</a>
+	<a href="https://nse-dash.{$DOMAIN:tinyserverlab.in}">NSE Dashboard</a>
+	</body></html>` 200
+}

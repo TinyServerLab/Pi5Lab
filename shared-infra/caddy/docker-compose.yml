@@ -1,0 +1,38 @@
+services:
+  caddy:
+    image: caddy:2-alpine
+    platform: linux/arm64
+    container_name: shared-caddy
+    restart: always
+    # DOMAIN and *_UPSTREAM values are substituted into the Caddyfile
+    env_file: .env
+
+    # Cloudflare Tunnel terminates TLS and forwards to this port; bound to
+    # localhost so the apps are not reachable around the tunnel.
+    # Set CADDY_BIND=0.0.0.0 in .env to also allow LAN access.
+    ports:
+      - "${CADDY_BIND:-127.0.0.1}:${CADDY_HTTP_PORT:-8080}:80"
+
+    volumes:
+      - ./config/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+
+    networks:
+      - shared-web
+
+    mem_limit: 128m
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  caddy_data:
+  caddy_config:
+
+networks:
+  # App containers join this (as external) so Caddy can reach them by name.
+  shared-web:
+    name: shared-web
