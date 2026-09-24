@@ -82,6 +82,27 @@ database is skipped and never modified — passwords are not reset.
 - **Change an app password:** editing `.env` alone does nothing for an existing role.
   `docker exec -it shared-postgres psql -U pgadmin -d postgres -c "ALTER ROLE finance_app PASSWORD 'new';"`
 
+## Restoring an old app dump
+
+Restore **as the app role**, so the tables belong to the app and not to `pgadmin`:
+
+```bash
+# custom-format dump (.dump), into the empty app database
+docker exec -i shared-postgres pg_restore -U pgadmin -d finance_app \
+  --no-owner --no-privileges --role=finance_app < finance.dump
+
+# plain SQL dump (.sql)
+docker exec -i shared-postgres psql -U finance_app -d finance_app < finance.sql
+```
+
+Already restored as `pgadmin` and the app now gets `permission denied for table ...`?
+Hand ownership back (no data is touched; safe to re-run):
+
+```bash
+docker exec -i shared-postgres bash -s -- finance_app finance_app < postgres/scripts/fix-ownership.sh
+#                                         ^database   ^app role
+```
+
 ## Backup
 
 ```bash
