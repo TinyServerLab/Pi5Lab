@@ -57,6 +57,17 @@ http://nse-dash.{$DOMAIN:tinyserverlab.in} {
 	reverse_proxy {$NSE_DASH_UPSTREAM:nse-signal-dashboard:8501}
 }
 
+home.tinyserverlab.in {
+	# ... your other routes ...
+
+	handle /inventory* {
+		request_body {
+			max_size 25MB
+		}
+		reverse_proxy home-inventory:8000
+	}
+}
+
 # Anything else (bare IP, unknown host): directory page
 :80 {
 	import common
@@ -72,5 +83,6 @@ http://nse-dash.{$DOMAIN:tinyserverlab.in} {
 	<a href="https://ledger.{$DOMAIN:tinyserverlab.in}">Ledger</a>
 	<a href="https://nse.{$DOMAIN:tinyserverlab.in}">NSE Signal</a>
 	<a href="https://nse-dash.{$DOMAIN:tinyserverlab.in}">NSE Dashboard</a>
+	<a href="https://home.{$DOMAIN:tinyserverlab.in}/invenotry">Home Asset Warranty Tracker</a>
 	</body></html>` 200
 }
