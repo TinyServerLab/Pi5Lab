@@ -57,14 +57,19 @@ http://nse-dash.{$DOMAIN:tinyserverlab.in} {
 	reverse_proxy {$NSE_DASH_UPSTREAM:nse-signal-dashboard:8501}
 }
 
-home.{$DOMAIN:tinyserverlab.in} {
-	# ... your other routes ...
+# Home Asset + Warranty
+http://home.{$DOMAIN:tinyserverlab.in} {
+	import common
 
 	handle /inventory* {
 		request_body {
 			max_size 25MB
 		}
-		reverse_proxy home-inventory:8502
+		reverse_proxy {$INV_UPSTREAM:home-inventory:8000}
+	}
+
+	handle {
+		redir /inventory/ 302
 	}
 }
 
