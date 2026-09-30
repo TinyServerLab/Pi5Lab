@@ -90,7 +90,7 @@ http://{$DOMAIN:apps.tinyserverlab.in} {
 					--primary-dark: #2563eb;
 					--bg-dark: #0f172a00;
 					--bg-light: #1a233200;
-					--text-light: #e2e8f0;
+					--text-light: #01aaff;
 					--text-muted: #94a3b8;
 					--border: #334155;
 					--success: #10b981;
