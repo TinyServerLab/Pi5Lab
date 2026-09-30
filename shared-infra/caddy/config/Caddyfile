@@ -68,14 +68,7 @@ http://{$DOMAIN:apps.tinyserverlab.in} {
 		}
 		reverse_proxy {$FT_UPSTREAM:finance-app:8000}
 	}
-	# NSE Signal — API / web UI
-	handle /nse* {
-		request_body {
-				max_size 25MB
-		}
-		reverse_proxy {$NSE_UPSTREAM:nse-signal-trader:8000}
-	}
-	nse-signal-trader
+
 	# Root path: apps directory
 	handle / {
 		header Content-Type "text/html; charset=utf-8"
@@ -480,6 +473,7 @@ http://{$DOMAIN:apps.tinyserverlab.in} {
 				</div> -->
 
 				<div class="apps-grid">
+					<!-- # Home inventory tracker -->
 					<a href="/inventory/" class="app-card">
 						<div class="app-icon">🏠</div>
 						<div class="app-title">Home Asset Tracker <span class="badge">Live</span></div>
@@ -496,6 +490,7 @@ http://{$DOMAIN:apps.tinyserverlab.in} {
 						<button class="cta-button">Open App →</button>
 					</a>
 
+					<!-- # Finance tracker -->
 					<a href="/finance/" class="app-card">
 						<div class="app-icon">💰</div>
 						<div class="app-title">Finance Tracker <span class="badge">Live</span></div>
@@ -512,7 +507,7 @@ http://{$DOMAIN:apps.tinyserverlab.in} {
 						<button class="cta-button">Open App →</button>
 					</a>
 
-
+					<!-- # NSE Signal — API / web UI -->
 					<a href="/nse/" class="app-card">
 						<div class="app-icon">📈</div>
 						<div class="app-title">NSE Signal Trader <span class="badge">Live</span></div>
