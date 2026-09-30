@@ -90,7 +90,7 @@ http://{$DOMAIN:apps.tinyserverlab.in} {
 	}
 }
 # ===== ROOT DOMAIN (tinyserverlab.in) =====
-http://{$DOMAIN:tinyserverlab.in} {
+http://{$DOMAIN:apps.tinyserverlab.in} {
 	import common
 	# Just return 404 — Cloudflare will catch this and show their page
 	respond 404
