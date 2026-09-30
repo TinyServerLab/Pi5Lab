@@ -58,7 +58,7 @@ http://nse-dash.{$DOMAIN:tinyserverlab.in} {
 }
 
 # ===== APPS ROUTER (apps.tinyserverlab.in) =====
-http://apps.{$DOMAIN:tinyserverlab.in} {
+http://{$DOMAIN:apps.tinyserverlab.in} {
 	import common
 
 	handle /inventory* {
