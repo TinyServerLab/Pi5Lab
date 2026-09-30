@@ -69,6 +69,20 @@ http://{$DOMAIN:apps.tinyserverlab.in} {
 		reverse_proxy {$FT_UPSTREAM:finance-app:8000}
 	}
 
+	handle /nse* {
+		request_body {
+				max_size 25MB
+		}
+		reverse_proxy {$NSE_UPSTREAM:nse-signal-trader:8000}
+	}
+
+	handle /dashboard-nse* {
+		request_body {
+				max_size 25MB
+		}
+		reverse_proxy {$NSE_DASH_UPSTREAM:nse-signal-dashboard:8501}
+	}
+
 	# Root path: apps directory
 	handle / {
 		header Content-Type "text/html; charset=utf-8"
