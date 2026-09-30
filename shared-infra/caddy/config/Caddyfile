@@ -58,21 +58,36 @@ http://nse-dash.{$DOMAIN:tinyserverlab.in} {
 }
 
 # Home Asset + Warranty
-http://home.{$DOMAIN:tinyserverlab.in} {
+http://{$DOMAIN:tinyserverlab.in} {
 	import common
 
 	handle /inventory* {
 		request_body {
 			max_size 25MB
 		}
-		reverse_proxy {$INV_UPSTREAM:home-inventory:8000}
+		reverse_proxy {$HOME_INVENTORY:home-inventory:8000}
 	}
 
+	handle /finance* {
+		request_body {
+				max_size 25MB
+		}
+		reverse_proxy {$FT_UPSTREAM:finance-app:8000}
+	}
 	handle {
-		redir /inventory/ 302
+		header Content-Type "text/html; charset=utf-8"
+		respond `<!DOCTYPE html><html><head><title>TinyServerLab Apps</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1">
+		<style>body{font-family:system-ui;display:flex;flex-direction:column;align-items:center;
+		justify-content:center;min-height:100vh;gap:16px;margin:0;background:#f8fafc}
+		a{padding:12px 28px;border-radius:8px;text-decoration:none;font-weight:600;font-size:16px;
+		background:#fff;color:#1e40af;border:2px solid #1e40af;min-width:200px;text-align:center}
+		</style></head><body><h1>Apps Directory</h1>
+		<a href="https://apps.{$DOMAIN:tinyserverlab.in}/inventory">Home Asset Tracker</a>
+		<a href="https://apps.{$DOMAIN:tinyserverlab.in}/finance">Finance Tracker</a>
+		</body></html>` 200
 	}
 }
-
 # Anything else (bare IP, unknown host): directory page
 :80 {
 	import common
@@ -88,6 +103,6 @@ http://home.{$DOMAIN:tinyserverlab.in} {
 	<a href="https://ledger.{$DOMAIN:tinyserverlab.in}">Ledger</a>
 	<a href="https://nse.{$DOMAIN:tinyserverlab.in}">NSE Signal</a>
 	<a href="https://nse-dash.{$DOMAIN:tinyserverlab.in}">NSE Dashboard</a>
-	<a href="https://home.{$DOMAIN:tinyserverlab.in}/inventory">Home Asset Warranty Tracker</a>
+	<a href="https://{$DOMAIN:tinyserverlab.in}/inventory">Home Asset Warranty Tracker</a>
 	</body></html>` 200
 }
