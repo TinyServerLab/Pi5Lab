@@ -74,7 +74,8 @@ http://{$DOMAIN:tinyserverlab.in} {
 		}
 		reverse_proxy {$FT_UPSTREAM:finance-app:8000}
 	}
-	handle {
+	# Root path: apps directory
+	handle / {
 		header Content-Type "text/html; charset=utf-8"
 		respond `<!DOCTYPE html><html><head><title>TinyServerLab Apps</title>
 		<meta name="viewport" content="width=device-width,initial-scale=1">
@@ -82,27 +83,21 @@ http://{$DOMAIN:tinyserverlab.in} {
 		justify-content:center;min-height:100vh;gap:16px;margin:0;background:#f8fafc}
 		a{padding:12px 28px;border-radius:8px;text-decoration:none;font-weight:600;font-size:16px;
 		background:#fff;color:#1e40af;border:2px solid #1e40af;min-width:200px;text-align:center}
-		</style></head><body><h1>Apps Directory</h1>
-		<a href="https://apps.{$DOMAIN:tinyserverlab.in}/inventory">Home Asset Tracker</a>
-		<a href="https://apps.{$DOMAIN:tinyserverlab.in}/finance">Finance Tracker</a>
+		</style></head><body><h1>TinyServerLab Apps</h1>
+		<a href="/inventory/">Home Asset Tracker</a>
+		<a href="/finance/">Finance Tracker</a>
 		</body></html>` 200
 	}
 }
-# Anything else (bare IP, unknown host): directory page
+# ===== ROOT DOMAIN (tinyserverlab.in) =====
+http://{$DOMAIN:tinyserverlab.in} {
+	import common
+	# Just return 404 — Cloudflare will catch this and show their page
+	respond 404
+}
+
+# ===== CATCH-ALL (unknown hosts) =====
 :80 {
 	import common
-	header Content-Type "text/html; charset=utf-8"
-	respond `<!DOCTYPE html><html><head><title>TinyServerLab Directory</title>
-	<meta name="viewport" content="width=device-width,initial-scale=1">
-	<style>body{font-family:system-ui;display:flex;flex-direction:column;align-items:center;
-	justify-content:center;min-height:100vh;gap:16px;margin:0;background:#f8fafc}
-	a{padding:12px 28px;border-radius:8px;text-decoration:none;font-weight:600;font-size:16px;
-	background:#fff;color:#1e40af;border:2px solid #1e40af;min-width:200px;text-align:center}
-	</style></head><body><h1>TinyServerLab Directory</h1>
-	<a href="https://ft.{$DOMAIN:tinyserverlab.in}">Finance Tracker</a>
-	<a href="https://ledger.{$DOMAIN:tinyserverlab.in}">Ledger</a>
-	<a href="https://nse.{$DOMAIN:tinyserverlab.in}">NSE Signal</a>
-	<a href="https://nse-dash.{$DOMAIN:tinyserverlab.in}">NSE Dashboard</a>
-	<a href="https://{$DOMAIN:tinyserverlab.in}/inventory">Home Asset Warranty Tracker</a>
-	</body></html>` 200
+	respond 404
 }
